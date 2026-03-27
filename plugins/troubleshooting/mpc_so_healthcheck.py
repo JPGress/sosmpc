@@ -1,3 +1,4 @@
+from core.logger import log
 import subprocess
 from core.config import C
 
@@ -16,7 +17,7 @@ def run():
     if not ip or not user:
         return
         
-    print(f"\n[INFO] Conectando via shell remota ao TTY. Console nativo irá solicitar chaves/senha do Manager {ip}...")
+    log.info(f"Conectando via shell remota ao TTY. Console nativo irá solicitar chaves/senha do Manager {ip}...")
     
     remote_command = "echo -e '\n=== VERSÃO CONSOLIDADA ==='; sudo so-version; echo -e '\n=== INTEGRIDADE DOCKER SERVICES ==='; sudo so-status"
     cmd = ["ssh", "-t", f"{user}@{ip}", remote_command]
@@ -26,6 +27,6 @@ def run():
         subprocess.run(cmd)
         print(f"\n{C.GREEN}[OK] Conexão Telemetry desfeita e concluída ao remoto.{C.RESET}")
     except KeyboardInterrupt:
-        print("\n[AVISO] Cancelado ativamente pelo Operador durante o trânsito TCP.")
+        log.warning(f"Cancelado ativamente pelo Operador durante o trânsito TCP.")
     except Exception as e:
         print(f"{C.RED}[ERRO FATAL] Engine Subprocess perdeu tracking da chave SSH: {e}{C.RESET}")

@@ -1,3 +1,5 @@
+from core.logger import log
+from core.config import C
 import os
 import time
 import subprocess
@@ -10,7 +12,7 @@ METADATA = {
 }
 
 def run():
-    print(f"\n--- {METADATA['name']} ---")
+    print(f'\n{C.BOLD}--- {METADATA[\"name\"]} ---{C.RESET}')
     urls = [
         (URL_PROXMOX, "Virtualização Tier-1"),
         (URL_PFSENSE, "Roteador Core Firewall"),
@@ -34,4 +36,4 @@ def run():
             
         time.sleep(0.7)
         
-    print("\n[OK] Sinais despachados. Olhe as abas em seu Firefox/Chrome principal.")
+    log.success(f"Sinais despachados. Olhe as abas em seu Firefox/Chrome principal.")

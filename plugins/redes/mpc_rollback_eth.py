@@ -1,3 +1,5 @@
+from core.config import C
+from core.logger import log
 import os
 import glob
 from datetime import datetime
@@ -10,16 +12,16 @@ METADATA = {
 }
 
 def run():
-    print(f"\n--- {METADATA['name']} ---")
+    print(f'\n{C.BOLD}--- {METADATA[\"name\"]} ---{C.RESET}')
     if not check_root():
-        print("[ERRO] Elevação necessária para manipulação de placa física.")
+        log.error("Elevação necessária para manipulação de placa física.")
         return
         
     try:
         eth_iface = detect_eth()
         backups = glob.glob(f"/tmp/eth_backup_{eth_iface}_*.conf")
         if not backups:
-            print(f"[AVISO] Histórico nulo para a placa identificada ({eth_iface}). Nenhum BKP criado.")
+            log.warning(f"Histórico nulo para a placa identificada ({eth_iface}). Nenhum BKP criado.")
             return
             
         backups.sort()
@@ -38,11 +40,11 @@ def run():
         elif choice.isdigit() and 1 <= int(choice) <= len(backups):
             choice_idx = int(choice) - 1
         else:
-            print("[ERRO] Indexamento inválido. Rollback rejeitado.")
+            log.error("Indexamento inválido. Rollback rejeitado.")
             return
             
         bkp_file = backups[choice_idx]
-        print(f"[INFO] Compilando restauração: {bkp_file}")
+        log.info(f"Compilando restauração: {bkp_file}")
         
         run_cmd(['ip', 'addr', 'flush', 'dev', eth_iface], check=False)
         run_cmd(['ip', 'link', 'set', 'dev', eth_iface, 'up'], check=False)
@@ -60,13 +62,13 @@ def run():
                 
         for ip_addr in bkp_ips.split():
             run_cmd(['ip', 'addr', 'add', ip_addr, 'dev', eth_iface], check=False)
-            print(f"[OK] Link-local revivido e assinado: {ip_addr}")
+            log.success(f"Link-local revivido e assinado: {ip_addr}")
             
         for route in bkp_routes.split('|'):
             if route:
                 run_cmd(['ip', 'route', 'add'] + route.split(), check=False)
-                print(f"[OK] Tabela atualizada com a rota em cache: {route}")
+                log.success(f"Tabela atualizada com a rota em cache: {route}")
                 
-        print("\n[OK] Snapshot de sistema injetado em malha viva.")
+        log.success(f"Snapshot de sistema injetado em malha viva.")
     except Exception as e:
-        print(f"[ERRO] Stack Trace Failure: {e}")
+        log.error(f"Stack Trace Failure: {e}")

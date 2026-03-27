@@ -1,3 +1,4 @@
+from core.logger import log
 import subprocess
 from core.config import C
 
@@ -17,7 +18,7 @@ def run():
     if not ip or not user:
         return
         
-    print(f"\n[AVISO] Injetando rotina agressiva via Wget/Curl sobre a conexão SSH de {ip}.")
+    log.warning(f"Injetando rotina agressiva via Wget/Curl sobre a conexão SSH de {ip}.")
     print("O Host subjacente irá requisitar permissões SU.")
     
     script_fix = "curl -fLSs https://raw.githubusercontent.com/Security-Onion-Solutions/securityonion/master/salt/salt/scripts/so-salt-update.sh | sudo bash"

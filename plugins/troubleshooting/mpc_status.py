@@ -1,3 +1,4 @@
+from core.config import C
 import glob
 from core.net_utils import detect_eth, detect_wifi, run_cmd
 
@@ -8,7 +9,7 @@ METADATA = {
 }
 
 def run():
-    print(f"\n--- {METADATA['name']} ---")
+    print(f'\n{C.BOLD}--- {METADATA[\"name\"]} ---{C.RESET}')
     
     try:
         eth_iface = detect_eth()

@@ -1,3 +1,4 @@
+from core.logger import log
 import os
 import time
 import subprocess
@@ -22,7 +23,7 @@ def run():
     bkp_dir = f"/tmp/mpc_backups_{int(time.time())}"
     os.makedirs(bkp_dir, exist_ok=True)
     
-    print(f"\n[INFO] {C.RED}Segurança:{C.RESET} A porta passiva pedirá credenciais em tela oculta do seu console SSH nativo para {target_ip}.")
+    log.info(f"{C.RED}Segurança:{C.RESET} A porta passiva pedirá credenciais em tela oculta do seu console SSH nativo para {target_ip}.")
     print(f"Salvaremos tudo na diretiva limpa Host -> {bkp_dir}")
     print("\n* Processo Fase 1 (Configurações do Node S.O SaltStack) ...")
     

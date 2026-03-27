@@ -1,3 +1,5 @@
+from core.config import C
+from core.logger import log
 import subprocess
 from core.net_utils import run_cmd, detect_eth, detect_wifi, get_wifi_default_route
 from core.config import MPC_GW, URL_PROXMOX, URL_SOC, WAN_TARGETS
@@ -27,10 +29,10 @@ def testar_wan():
         
     default_gw = get_wifi_default_route(wifi_iface)
     if not default_gw:
-        print("[AVISO] Nenhuma rota Default encontrada. Você está sem acesso de saída Internet/Corporativa.")
+        log.warning("Nenhuma rota Default encontrada. Você está sem acesso de saída Internet/Corporativa.")
         return False
         
-    print(f"[INFO] ISP Default Gateway => via {default_gw}")
+    log.info(f"ISP Default Gateway => via {default_gw}")
     
     falhas = 0
     for t in WAN_TARGETS:
@@ -44,14 +46,14 @@ def testar_wan():
     try:
         res = run_cmd(['curl', '-s', '--max-time', '5', 'https://ifconfig.me'], check=False)
         if res.stdout:
-            print(f"[INFO] IP Público Detectado p/ Transição NAT: {res.stdout.strip()}")
+            log.info(f"IP Público Detectado p/ Transição NAT: {res.stdout.strip()}")
         else:
-            print("[AVISO] Timeout na porta 443 do ifconfig.me. Ausência real de rede externa detectada.")
+            log.warning("Timeout na porta 443 do ifconfig.me. Ausência real de rede externa detectada.")
     except Exception:
-        print("[AVISO] Serviço ou pacote Curl faltando para auditoria completa.")
+        log.warning("Serviço ou pacote Curl faltando para auditoria completa.")
         
     wan_trc = WAN_TARGETS[0]
-    print(f"\n[INFO] Aplicando Traceroute Externo na Host L3 -> {wan_trc}")
+    log.info(f"Aplicando Traceroute Externo na Host L3 -> {wan_trc}")
     try:
         res = run_cmd(['traceroute', '-n', '-m', '10', '-w', '2', wan_trc], check=False)
         print(res.stdout.strip() if res.stdout else "   [ERRO] ICMP TTL Time-Exceeded sendo bloqueado pelo provider.")
@@ -59,9 +61,9 @@ def testar_wan():
         print("   [INFO] Instale o pacote 'traceroute' para debug avançado.")
         
     if falhas == 0:
-        print("\n[OK] Saída Global ISP sem injúrias na camada TCP/IP.")
+        log.success(f"Saída Global ISP sem injúrias na camada TCP/IP.")
     else:
-        print(f"\n[ERRO] Redundância externa parcial/offline. ({falhas}/{len(WAN_TARGETS)} alvos inativos).")
+        log.error(f"Redundância externa parcial/offline. ({falhas}/{len(WAN_TARGETS)} alvos inativos).")
     return True
 
 def testar_mpc():
@@ -73,7 +75,7 @@ def testar_mpc():
         if 'inet ' not in res.stdout:
             print(f"[ALERTA] Servidor não alocou Virtual IP na placa física ({eth_iface}). Inicie o Setup de Dual NIC.")
     except Exception:
-        print("[ERRO] Ethernet ausente fisicamente.")
+        log.error("Ethernet ausente fisicamente.")
         
     hosts_core = [
         ("pfSense (GW P2P)", MPC_GW),
@@ -90,7 +92,7 @@ def testar_mpc():
             print("[ TIMEOUT ]")
             falhas += 1
             
-    print(f"\n[INFO] Traceroute ao Ponto Leste -> Gateway ({MPC_GW})")
+    log.info(f"Traceroute ao Ponto Leste -> Gateway ({MPC_GW})")
     try:
         res = run_cmd(['traceroute', '-n', '-m', '5', '-w', '2', MPC_GW], check=False)
         print(res.stdout.strip())
@@ -98,14 +100,14 @@ def testar_mpc():
         pass
         
     if ping_host(MPC_GW, count=1, timeout=1):
-        print(f"\n[INFO] Traceroute de Switch L2 -> Node Principal ({MPC_PROXMOX})")
+        log.info(f"Traceroute de Switch L2 -> Node Principal ({MPC_PROXMOX})")
         res2 = run_cmd(['traceroute', '-n', '-m', '5', '-w', '2', MPC_PROXMOX], check=False)
         print(res2.stdout.strip())
     else:
-        print("\n[AVISO] Traceroute ao nó virtual abortado devido ao salto L2/Gateway estar quebrado.")
+        log.warning(f"Traceroute ao nó virtual abortado devido ao salto L2/Gateway estar quebrado.")
         
     if falhas == 0:
-        print("\n[OK] Diagnóstico MPC Air-Gapped perfeitamente comunicável.")
+        log.success(f"Diagnóstico MPC Air-Gapped perfeitamente comunicável.")
     else:
         print(f"\n[FALHA] Integridade deficiente localmente. Nós inalcançáveis: {falhas}")
 

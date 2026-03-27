@@ -1,3 +1,5 @@
+from core.config import C
+from core.logger import log
 import os
 import time
 from datetime import datetime
@@ -25,12 +27,12 @@ def backup_eth(iface):
         f.write(f"IPS={' '.join(ip_list)}\n")
         f.write(f"ROUTES={'|'.join(r_list)}\n")
         
-    print(f"[INFO] Backup salvo temporariamente em: {backup_file}")
+    log.info(f"Backup salvo temporariamente em: {backup_file}")
 
 def run():
-    print(f"\n--- {METADATA['name']} ---")
+    print(f'\n{C.BOLD}--- {METADATA[\"name\"]} ---{C.RESET}')
     if not check_root():
-        print("[ERRO] Este módulo altera camadas de roteamento e exige 'sudo'. Acesso negado.")
+        log.error("Este módulo altera camadas de roteamento e exige 'sudo'. Acesso negado.")
         return
         
     try:
@@ -38,32 +40,32 @@ def run():
         wifi_iface = detect_wifi()
         wifi_gw = get_wifi_default_route(wifi_iface)
         
-        print(f"[INFO] Ethernet : {eth_iface}")
-        print(f"[INFO] Wi-Fi    : {wifi_iface or 'N/A'}")
+        log.info(f"Ethernet : {eth_iface}")
+        log.info(f"Wi-Fi    : {wifi_iface or 'N/A'}")
         if wifi_gw:
-            print(f"[INFO] Gateway ISP: {wifi_gw}")
+            log.info(f"Gateway ISP: {wifi_gw}")
             
         backup_eth(eth_iface)
         
-        print(f"\n[INFO] Despejando endereços conflitantes em {eth_iface}...")
+        log.info(f"Despejando endereços conflitantes em {eth_iface}...")
         run_cmd(['ip', 'addr', 'flush', 'dev', eth_iface], check=False)
         
         run_cmd(['ip', 'link', 'set', 'dev', eth_iface, 'up'])
-        print(f"[OK] Link up em {eth_iface}.")
+        log.success(f"Link up em {eth_iface}.")
         
         run_cmd(['ip', 'addr', 'add', f"{MPC_IP}/{MPC_PREFIX}", 'dev', eth_iface])
-        print(f"[OK] Endereço P2P alocado: {MPC_IP}/{MPC_PREFIX}")
+        log.success(f"Endereço P2P alocado: {MPC_IP}/{MPC_PREFIX}")
         
         for net in MPC_ROUTES:
             run_cmd(['ip', 'route', 'replace', net, 'via', MPC_GW, 'dev', eth_iface, 'onlink'])
-            print(f"[OK] Rota agregada: {net} GW {MPC_GW}")
+            log.success(f"Rota agregada: {net} GW {MPC_GW}")
             
-        print("\n[INFO] Auditando ICMP ao gateway MPC...")
+        log.info(f"Auditando ICMP ao gateway MPC...")
         res = run_cmd(['ping', '-c', '3', '-W', '2', MPC_GW], check=False)
         if res.returncode == 0:
-            print(f"[OK] GW remoto ({MPC_GW}) acessível na malha.")
+            log.success(f"GW remoto ({MPC_GW}) acessível na malha.")
         else:
-            print(f"[AVISO] O gateway de contingência {MPC_GW} não respondeu ICMP. Falta de cabeamento físico?")
+            log.warning(f"O gateway de contingência {MPC_GW} não respondeu ICMP. Falta de cabeamento físico?")
             
     except Exception as e:
-        print(f"[ERRO] Fluxo operacional falhou com erro sintático/código: {e}")
+        log.error(f"Fluxo operacional falhou com erro sintático/código: {e}")

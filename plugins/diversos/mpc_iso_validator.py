@@ -1,3 +1,4 @@
+from core.logger import log
 import os
 import hashlib
 from core.config import C
@@ -19,7 +20,7 @@ def run():
     expected_hash = input("Cole a Hash SHA256 Oficial Pública (pular = Vazio): ").strip().lower()
     
     size_mb = os.path.getsize(file_path) / 1024 / 1024
-    print(f"\n[INFO] Realizando alocação e stream criptográfico em memória ({size_mb:.2f} MB)... Aguarde.")
+    log.info(f"Realizando alocação e stream criptográfico em memória ({size_mb:.2f} MB)... Aguarde.")
     
     sha256 = hashlib.sha256()
     try:
