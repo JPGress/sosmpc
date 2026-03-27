@@ -10,7 +10,7 @@ def clear_screen():
 
 def show_header():
     print(ascii_banner())
-    print(f"{C.BLACK}      {C.BG_BRIGHT_RED}S.O.S. MPC by {AUTHOR} - v{VERSION} ({RELEASE}) {C.RESET}")
+    print(f"{C.BLACK}      {C.BG_BRIGHT_RED}S.O.S. MPC por {AUTHOR} - v{VERSION} ({RELEASE}) {C.RESET}")
     print(f"{C.RED}+====================================================================================+{C.RESET}")
     print(f"{C.GRAY}       Operador, selecione uma tática informando o número correspondente{C.RESET}")
     print(f"{C.RED}+====================================================================================+{C.RESET}")
