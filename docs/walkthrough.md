@@ -63,3 +63,11 @@ Visando padronizar o código com a identidade visual madura de outros projetos d
 - `core/config.py`: Substituiu hashes engessados por uma `class C:` de componentes de Cores (Ex: `C.BG_BLACK`) e acoplou um Banner Interativo dinâmico (ASCII).
 - `core/logger.py`: Dispensou o output oculto padrão. As capturas adotaram decorators e wrappers com prefixos verbais como `[+]` e `[-]` pintados no console, dando um retorno agradável da camada de Troubleshooting. 
 - *Automação de Plugins*: Mais de 15 plugins foram corrigidos pelo Agente Autônomo para transitar das variáveis velhas para os import handlers da classe `C`.
+
+## Nova Feature: Transferência OOB via HTTP (Standard Library)
+Foi portado o plugin `web_server.py` do *owl-PyOpS*, adaptando-o para as restrições do ambiente *Air-Gapped* do MPC.
+
+- **`mpc_web_server.py`**: Utiliza exclusivamente as bibliotecas `http.server` e `socketserver` nativas do Python 3.10+.
+- **UX Adaptado**: O operador pode selecionar a interface de rede (Wi-Fi para o PC ou Ethernet para o Gateway) para servir arquivos como ISOs, patches de segurança ou logs brutos coletados, sem a necessidade de pendrives ou mídias físicas em rede confiável.
+- **Portabilidade**: Removemos a dependência do `netifaces` (Pip) presente no *owl*, substituindo por um parser regex de baixo nível que lê as interfaces físicas diretamente do kernel Linux via `ip addr`.
+

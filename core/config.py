@@ -5,8 +5,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGINS_DIR = os.path.join(BASE_DIR, 'plugins')
 
 VERSION = "0.01.000"
-RELEASE = "S.O.S MPC BASE"
-AUTHOR = "CyberVault System / Ported from 0wL"
+RELEASE = "BETA"
+AUTHOR = "2º SGT GRESS"
+
 
 class C:
     BLACK = "\033[30m"
@@ -23,29 +24,28 @@ class C:
     BRIGHT_GREEN = "\033[92m"
     BRIGHT_YELLOW = "\033[93m"
 
-    BG_BLACK="\033[40m"
-    BG_RED="\033[41m"
-    BG_GREEN="\033[42m"
-    BG_YELLOW="\033[43m"
-    BG_BLUE="\033[44m"
-    BG_MAGENTA="\033[45m"
-    BG_CYAN="\033[46m"
-    BG_WHITE="\033[47m"
-    BG_GRAY="\033[100m"
-    BG_BRIGHT_RED="\033[101m"
+    BG_BLACK = "\033[40m"
+    BG_RED = "\033[41m"
+    BG_GREEN = "\033[42m"
+    BG_YELLOW = "\033[43m"
+    BG_BLUE = "\033[44m"
+    BG_MAGENTA = "\033[45m"
+    BG_CYAN = "\033[46m"
+    BG_WHITE = "\033[47m"
+    BG_GRAY = "\033[100m"
+    BG_BRIGHT_RED = "\033[101m"
 
     BOLD = "\033[1m"
     RESET = "\033[0m"
 
+
 def ascii_banner():
     return f"""{C.BG_BLACK}{C.CYAN}
-       _____     ____     _____         __  __  _____   _____ 
-      / ____|   / __ \\   / ____|       |  \\/  ||  __ \\ / ____|
-     | (___    | |  | | | (___         | \\  / || |__) | |     
-      \\___ \\   | |  | |  \\___ \\        | |\\/| ||  ___/| |     
-      ____) |  | |__| |  ____) |       | |  | || |    | |____ 
-     |_____/    \\____/  |_____/        |_|  |_||_|     \\_____|
+        __|    _ \     __|       \  |   _ \    __| 
+      \__ \   (   |  \__ \      |\/ |   __/   (    
+      ____/  \___/   ____/     _|  _|  _|    \___| 
     {C.RESET}"""
+
 
 GROUP_COLORS = {
     "guias": "BLUE",
