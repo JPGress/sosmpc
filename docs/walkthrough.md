@@ -3,17 +3,15 @@
 A estruturação completa e construção inicial do *Script do Operador de Segurança (S.O.S. MPC)* foi concluída com sucesso.
 
 ## Resumo das Modificações
-
 O projeto Greenfield foi implementado a partir do zero utilizando uma arquitetura modular (`M-V-C` adaptado) nativa em Python 3.10+, focada num ambiente de sistema de defesa *Air-Gapped* restrito, dispensando a necessidade de dependências não nativas para seu funcionamento (utilizando as APIs nativas do Python para UX e gerenciamento).
 
-### Arquivos e Estruturas Implementadas
-
+### Arquivos e Estruturas Implementadas:
 1. **Ponto de Entrada Principal (`sosmpc.py`)**: Orquestrador que junta o motor e levanta a UX.
 2. **Motor Core (`core/`)**:
    - `config.py`: Constantes dinâmicas do projeto e mapa completo de renderização de Cores ANSI (*Terminal First* UX).
    - `logger.py`: Estrutura simples de auditoria de execução salvando os logs dentro do diretório `logs/`.
    - `menu.py`: Funções renderizadoras modulares exclusivas da camada visual (View), cuidando das demarcações para módulos desabilitados.
-   - `registry.py`: Abstração complexa de Auto-Discovery de plugins, garantindo que adicionar uma funcionalidade futura não requeira modificações na estrutura de menu.
+   -  `registry.py`: Abstração complexa de Auto-Discovery de plugins, garantindo que adicionar uma funcionalidade futura não requeira modificações na estrutura de menu.
    - `dispatcher.py`: Controler que intercepta e valida os Requests do SysAd e inicia o Modulo destino.
 3. **Módulos Práticos (`plugins/`)**:
    - `guias/guia_update.py`: Demonstração operacional estática baseada no update do Módulo MPC via USB.
@@ -22,25 +20,20 @@ O projeto Greenfield foi implementado a partir do zero utilizando uma arquitetur
    - `troubleshooting/diagnostico.py`: Um plugin de rede inicialmente intocado (`active: False`) apenas para provar a feature visual e de defesa de integridade do registro (o menu avisa o bloqueio a testes com instabilidades e impede sua execução).
 
 ### Validação
-
-- O sistema MVP foi levantado via execução de testes (`python3 sosmpc.py`).
+- O sistema MVP foi levantado via execução de testes (`python3 sosmpc.py`). 
 - Menus agruparam-se conforme esperado, renderizaram devidamente seus ANSI Colors nativos e processaram sem *crashes* opções e encerramento, garantindo o ciclo da POC.
 
 ## Como Executar
-
 Basta entrar no diretório e fazer a chamada local para usufruir e adicionar os próximos plugins da sua necessidade:
-
 ```bash
 cd /home/r3v4n/Documentos/CyberVault/20_PROJECTS/24_PROFISSIONAL/STI/SOS_MPC/
 python3 sosmpc.py
 ```
 
 ## Nova Feature: Portabilidade do `auto_config_acesso_mpc.sh`
-
 O antigo script em Bash isolado em `00-ORGANIZAR/sh/` foi devidamente mapeado, dividido e acoplado na arquitetura nativa Python do *SOS MPC*. Não é mais necessária a execução em shell script solto. Para gerenciar os acessos, a biblioteca `core/net_utils.py` foi criada para operar a stack do `iproute2` sem falhas e sem uso de pacotes pip externos (`subprocess` puro).
 
 ### Mapeamento dos Novos Plugins
-
 - **Redes (Setup & Conectividade)**: `mpc_setup_dual_nic.py` (Setup roteado Dual-NIC em Python), `mpc_flush_eth.py` (Limpeza de links), `mpc_rollback_eth.py` (Restauração baseada nas cópias seguras salvas em `/tmp/eth_backup*`).
 - **Redes (OOB Lateral Tunnels)**: `mpc_tunnel_start.py` (Conexão SSH em processo isolado / Background) e `mpc_tunnel_stop.py` (Mata o PID do túnel ativo).
 - **Troubleshooting**: `mpc_status.py` (Mostra IPs e Rotas para Ethernet e Wi-Fi simultaneamente), `mpc_ping_check.py` (Teste ICMP no Gateway Core).
@@ -49,13 +42,11 @@ O antigo script em Bash isolado em `00-ORGANIZAR/sh/` foi devidamente mapeado, d
 **Segurança**: Todas as chamadas dos plugins de rede possuem detecções de EUID/Superusuário, abortando com o aviso amigável sem apresentar rastros e quebras de Menu (Crash / Traceback) ao usuário caso ele o execute como conta comum.
 
 ## Nova Feature: Escalabilidade Diagnóstica (`teste_conectividade.sh`)
-
 Obedecendo ao princípio de evitar "redundâncias desnecessárias" (DRY), o antigo bash de testes em massa foi condensado em único módulo central de rastreio, limpando o código.
 
 - `plugins/troubleshooting/mpc_diagnostico.py`: Substituiu cabalmente os antigos `diagnostico.py` (placeholder) e `mpc_ping_check.py` reduzindo a sobrecarga na leitura do Menu de Interface. O plugin unifica pings de WAN (Google, DNS) usando `subprocess`, extração de IP Público com `curl ifconfig.me`, e traceroutes iterativos tanto para o Backbone da internet quanto para o Gateway Core Air-Gapped do MPC (PfSense, Proxmox, SOC).
 
 ## Nova Feature: Automação de Atualização e Prevenção Air-Gapped
-
 Aplicando extrações e conceitos do "Guia de Estratégias Avançadas (Security Onion 2.4 / Air-Gapped)" do projeto MPC atual, montamos módulos táticos que operam da máquina da base de análise sem requerer shell direta manual sempre que possível.
 
 - **Checklist Guiado (Terminal)**: O `plugins/guias/guia_update.py` foi reforçado com a matriz de Snapshots oficial e alertas críticos em relação à quebra de autenticação do Salt Stack Manager.
@@ -63,4 +54,12 @@ Aplicando extrações e conceitos do "Guia de Estratégias Avançadas (Security 
 - **Roteamento Tático SSH (Subprocess)**: Sem requerer a quebra do requisito da *Standard Library* (ou necessidade de *paramiko* via Pip), 3 módulos de acionamento interativo com as chaves OpenSSH da Host foram alocadas:
   - `mpc_remote_backup.py`: Exporta preventivamente com *SCP* o `/etc/pve` (Proxmox), o Pillar e Local do SaltStack de forma recursiva ao PC operador para a pasta `/tmp/`.
   - `mpc_so_healthcheck.py`: Consulta a telemetria do nó chamando externamente `so-status` e a árvore central com `so-version`.
-  - `mpc_so_salt_fix.py`: Solucionador remoto ágil (Patch Auth 2.4.210) que injeta o *Wget/Curl fix* para corrigir a subida de Sensors Air-gapped no mínimo *Auth* 3.
+  - `mpc_so_salt_fix.py`: Solucionador remoto ágil (Patch Auth 2.4.210) que injeta o *Wget/Curl fix* para corrigir a subida de Sensors Air-gapped no mínimo _Auth_ 3.
+
+## Nova Feature: UX Cloning & Padronização Estética (OwL-PyOpS)
+Visando padronizar o código com a identidade visual madura de outros projetos da CyberVault (*owl-PyOpS*), o *S.O.S. MPC* absorveu a injeção central de estilos por classe nativa.
+
+- `sosmpc.py`: Enquadrado com metadados de Encoding e assinatura de script compatível com o portfólio de engenharia.
+- `core/config.py`: Substituiu hashes engessados por uma `class C:` de componentes de Cores (Ex: `C.BG_BLACK`) e acoplou um Banner Interativo dinâmico (ASCII).
+- `core/logger.py`: Dispensou o output oculto padrão. As capturas adotaram decorators e wrappers com prefixos verbais como `[+]` e `[-]` pintados no console, dando um retorno agradável da camada de Troubleshooting. 
+- *Automação de Plugins*: Mais de 15 plugins foram corrigidos pelo Agente Autônomo para transitar das variáveis velhas para os import handlers da classe `C`.

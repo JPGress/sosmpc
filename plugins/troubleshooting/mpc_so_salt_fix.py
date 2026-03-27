@@ -1,5 +1,5 @@
 import subprocess
-from core.config import COLORS
+from core.config import C
 
 METADATA = {
     "name": "Patch Auth Remoto (SaltStack 2.4.210)",
@@ -8,7 +8,7 @@ METADATA = {
 }
 
 def run():
-    print(f"\n{COLORS['bold']}{COLORS['red']}--- {METADATA['name']} ---{COLORS['reset']}")
+    print(f"\n{C.BOLD}{C.RED}--- {METADATA['name']} ---{C.RESET}")
     print("Módulo de atuação crônica para correção do lock de autenticação 'minimum_auth_version=3'!")
     
     ip = input("\nIP de Roteamento do Nó Isolado (O Sensor ou Search em estado Offline perante o Cluster Manager): ").strip()
@@ -25,7 +25,7 @@ def run():
     
     try:
         subprocess.run(cmd)
-        print(f"\n{COLORS['green']}[OK CONCLUÍDO] Fim da via da inserção do Patch.{COLORS['reset']}")
+        print(f"\n{C.GREEN}[OK CONCLUÍDO] Fim da via da inserção do Patch.{C.RESET}")
         print("Tática de Paciência: O Nó precisa compilar no novo min-auth. Volte em 15minutose confirme via 'Healthcheck Remoto'.")
     except Exception as e:
-        print(f"{COLORS['red']}[ERRO ROTEAMENTO] SSH sub-thread morta durante sub-processo Curl no endpoint distante: {e}{COLORS['reset']}")
+        print(f"{C.RED}[ERRO ROTEAMENTO] SSH sub-thread morta durante sub-processo Curl no endpoint distante: {e}{C.RESET}")

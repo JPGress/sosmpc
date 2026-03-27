@@ -1,6 +1,6 @@
 import os
 import hashlib
-from core.config import COLORS
+from core.config import C
 
 METADATA = {
     "name": "Validador Criptográfico Local de ISOs (SHA256)",
@@ -9,11 +9,11 @@ METADATA = {
 }
 
 def run():
-    print(f"\n{COLORS['bold']}--- {METADATA['name']} ---{COLORS['reset']}")
+    print(f"\n{C.BOLD}--- {METADATA['name']} ---{C.RESET}")
     file_path = input("Caminho absoluto ou relativo do arquivo da mídia/ISO: ").strip().strip("'").strip('"')
     
     if not os.path.isfile(file_path):
-        print(f"{COLORS['red']}[ERRO] Cadeia de arquivo bloqueada ou Path inacessível à leitura: {file_path}{COLORS['reset']}")
+        print(f"{C.RED}[ERRO] Cadeia de arquivo bloqueada ou Path inacessível à leitura: {file_path}{C.RESET}")
         return
         
     expected_hash = input("Cole a Hash SHA256 Oficial Pública (pular = Vazio): ").strip().lower()
@@ -35,10 +35,10 @@ def run():
             print(f"Assinatura inserida   : {expected_hash}")
         
         if not expected_hash:
-            print(f"{COLORS['yellow']}[AVISO] Nenhuma assinatura hash informada como flag. Comportamento analítico puro.{COLORS['reset']}")
+            print(f"{C.YELLOW}[AVISO] Nenhuma assinatura hash informada como flag. Comportamento analítico puro.{C.RESET}")
         elif calc_hash == expected_hash:
-            print(f"{COLORS['green']}[VÁLIDO] A integridade do arquivo binário está perfeitamente alinhada. O Snapshot local é idêntico!{COLORS['reset']}")
+            print(f"{C.GREEN}[VÁLIDO] A integridade do arquivo binário está perfeitamente alinhada. O Snapshot local é idêntico!{C.RESET}")
         else:
-            print(f"{COLORS['red']}[CORRUPTO] CUIDADO ABSOLUTO! O arquivo da MÍDIA não é espelho criptográfico verdadeiro.{COLORS['reset']}")
+            print(f"{C.RED}[CORRUPTO] CUIDADO ABSOLUTO! O arquivo da MÍDIA não é espelho criptográfico verdadeiro.{C.RESET}")
     except Exception as e:
         print(f"\n[ERRO CRÍTICO] IO read corrompeu na varredura: {e}")

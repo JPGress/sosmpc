@@ -4,25 +4,54 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLUGINS_DIR = os.path.join(BASE_DIR, 'plugins')
 
-# Configuração Padrão do Terminal (Cores ANSI)
-COLORS = {
-    "red": "\033[91m",
-    "blue": "\033[94m",
-    "purple": "\033[95m",
-    "green": "\033[92m",
-    "yellow": "\033[93m",
-    "gray": "\033[90m",
-    "cyan": "\033[96m",
-    "reset": "\033[0m",
-    "bold": "\033[1m"
-}
+VERSION = "0.01.000"
+RELEASE = "S.O.S MPC BASE"
+AUTHOR = "CyberVault System / Ported from 0wL"
 
-# Associação de cores para categorias de módulos no MVP
+class C:
+    BLACK = "\033[30m"
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    CYAN = "\033[36m"
+    WHITE = "\033[37m"
+    GRAY = "\033[90m"
+
+    BRIGHT_RED = "\033[91m"
+    BRIGHT_GREEN = "\033[92m"
+    BRIGHT_YELLOW = "\033[93m"
+
+    BG_BLACK="\033[40m"
+    BG_RED="\033[41m"
+    BG_GREEN="\033[42m"
+    BG_YELLOW="\033[43m"
+    BG_BLUE="\033[44m"
+    BG_MAGENTA="\033[45m"
+    BG_CYAN="\033[46m"
+    BG_WHITE="\033[47m"
+    BG_GRAY="\033[100m"
+    BG_BRIGHT_RED="\033[101m"
+
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+
+def ascii_banner():
+    return f"""{C.BG_BLACK}{C.CYAN}
+       _____     ____     _____         __  __  _____   _____ 
+      / ____|   / __ \\   / ____|       |  \\/  ||  __ \\ / ____|
+     | (___    | |  | | | (___         | \\  / || |__) | |     
+      \\___ \\   | |  | |  \\___ \\        | |\\/| ||  ___/| |     
+      ____) |  | |__| |  ____) |       | |  | || |    | |____ 
+     |_____/    \\____/  |_____/        |_|  |_||_|     \\_____|
+    {C.RESET}"""
+
 GROUP_COLORS = {
-    "guias": "blue",
-    "redes": "purple",
-    "troubleshooting": "red",
-    "diversos": "gray"
+    "guias": "BLUE",
+    "redes": "MAGENTA",
+    "troubleshooting": "RED",
+    "diversos": "GRAY"
 }
 
 # --- CONSTANTES DE REDE E MOVIMENTO LATERAL S.O.S. MPC ---

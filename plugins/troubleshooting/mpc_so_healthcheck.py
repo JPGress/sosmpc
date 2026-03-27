@@ -1,5 +1,5 @@
 import subprocess
-from core.config import COLORS
+from core.config import C
 
 METADATA = {
     "name": "Healthcheck Remoto SO-Status via SSH",
@@ -8,7 +8,7 @@ METADATA = {
 }
 
 def run():
-    print(f"\n{COLORS['bold']}--- {METADATA['name']} ---{COLORS['reset']}")
+    print(f"\n{C.BOLD}--- {METADATA['name']} ---{C.RESET}")
     
     ip = input("\nIP/Host do S.O Manager alvo (Ex: 172.16.161.60): ").strip()
     user = input("Usuário da máquina alvo (Sudoer): ").strip()
@@ -24,8 +24,8 @@ def run():
     try:
         # PTY Tty handler é mantido ativado pelo '-t' permitindo password prompts do sudo e openssh.
         subprocess.run(cmd)
-        print(f"\n{COLORS['green']}[OK] Conexão Telemetry desfeita e concluída ao remoto.{COLORS['reset']}")
+        print(f"\n{C.GREEN}[OK] Conexão Telemetry desfeita e concluída ao remoto.{C.RESET}")
     except KeyboardInterrupt:
         print("\n[AVISO] Cancelado ativamente pelo Operador durante o trânsito TCP.")
     except Exception as e:
-        print(f"{COLORS['red']}[ERRO FATAL] Engine Subprocess perdeu tracking da chave SSH: {e}{COLORS['reset']}")
+        print(f"{C.RED}[ERRO FATAL] Engine Subprocess perdeu tracking da chave SSH: {e}{C.RESET}")

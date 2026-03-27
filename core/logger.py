@@ -1,22 +1,27 @@
-import logging
-import os
-from .config import BASE_DIR
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-LOG_DIR = os.path.join(BASE_DIR, 'logs')
-if not os.path.exists(LOG_DIR):
-    os.makedirs(LOG_DIR)
+from core.config import C
 
-LOG_FILE = os.path.join(LOG_DIR, 'sosmpc.log')
+class Logger:
+    @staticmethod
+    def info(msg):
+        print(f" {C.BRIGHT_GREEN}[+]{C.RESET} {msg}")
 
-logging.basicConfig(
-    filename=LOG_FILE,
-    filemode='a',
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s',
-    level=logging.INFO
-)
+    @staticmethod
+    def warning(msg):
+        print(f" {C.BRIGHT_YELLOW}[*]{C.RESET} {C.YELLOW}{msg}{C.RESET}")
 
-logger = logging.getLogger("sosmpc")
+    @staticmethod
+    def error(msg):
+        print(f" {C.BRIGHT_RED}[-]{C.RESET} {C.RED}{msg}{C.RESET}")
 
-def get_logger(name: str) -> logging.Logger:
-    """Retorna uma instância de logger filha."""
-    return logging.getLogger(name)
+    @staticmethod
+    def success(msg):
+        print(f" {C.BRIGHT_GREEN}[+]{C.RESET} {C.GREEN}{msg}{C.RESET}")
+
+    @staticmethod
+    def debug(msg):
+        print(f" {C.GRAY}[DEBUG] {msg}{C.RESET}")
+
+log = Logger()

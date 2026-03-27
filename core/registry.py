@@ -2,9 +2,7 @@ import os
 import importlib.util
 from typing import Dict, Any
 from .config import PLUGINS_DIR
-from .logger import get_logger
-
-logger = get_logger(__name__)
+from .logger import log
 
 def load_plugins() -> Dict[str, Any]:
     """
@@ -15,7 +13,7 @@ def load_plugins() -> Dict[str, Any]:
     registry = {}
     
     if not os.path.exists(PLUGINS_DIR):
-        logger.warning(f"Diretório de plugins não encontrado: {PLUGINS_DIR}")
+        log.warning(f"Diretório de plugins não encontrado: {PLUGINS_DIR}")
         return registry
 
     plugin_id_counter = 1
@@ -46,10 +44,10 @@ def load_plugins() -> Dict[str, Any]:
                             
                         registry[plugin_info['id']] = plugin_info
                         plugin_id_counter += 1
-                        logger.info(f"Plugin registrado: {plugin_info['name']} (Grupo: {group_name})")
+                        log.info(f"Plugin registrado: {plugin_info['name']} (Grupo: {group_name})")
                     else:
-                        logger.warning(f"Módulo {file_name} ignorado. Faltam 'METADATA' ou função 'run()'.")
+                        log.warning(f"Módulo {file_name} ignorado. Faltam 'METADATA' ou função 'run()'.")
                 except Exception as e:
-                    logger.error(f"Erro ao carregar o plugin {file_path}: {e}")
+                    log.error(f"Erro ao carregar o plugin {file_path}: {e}")
                     
     return registry

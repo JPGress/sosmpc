@@ -1,7 +1,5 @@
 from typing import Dict, Any
-from .logger import get_logger
-
-logger = get_logger(__name__)
+from .logger import log
 
 def dispatch(choice: str, plugins_registry: Dict[str, Any]) -> bool:
     """Invoca o plugin correspondente se a escolha for válida."""
@@ -17,11 +15,11 @@ def dispatch(choice: str, plugins_registry: Dict[str, Any]) -> bool:
             return True
             
         print(f"\nIniciando: {plugin['name']}...")
-        logger.info(f"Executando ação selecionada: {plugin['name']}")
+        log.info(f"Executando ação selecionada: {plugin['name']}")
         try:
             plugin['module'].run()
         except Exception as e:
-            logger.error(f"Falha ao rodar o plugin {plugin['name']}: {e}")
+            log.error(f"Falha ao rodar o plugin {plugin['name']}: {e}")
             print(f"\n[ERRO] Ocorreu uma falha no módulo: {e}")
             
         input("\nPressione ENTER para voltar ao menu principal...")
