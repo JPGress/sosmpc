@@ -29,3 +29,14 @@ Basta entrar no diretório e fazer a chamada local para usufruir e adicionar os 
 cd /home/r3v4n/Documentos/CyberVault/20_PROJECTS/24_PROFISSIONAL/STI/SOS_MPC/
 python3 sosmpc.py
 ```
+
+## Nova Feature: Portabilidade do `auto_config_acesso_mpc.sh`
+O antigo script em Bash isolado em `00-ORGANIZAR/sh/` foi devidamente mapeado, dividido e acoplado na arquitetura nativa Python do *SOS MPC*. Não é mais necessária a execução em shell script solto. Para gerenciar os acessos, a biblioteca `core/net_utils.py` foi criada para operar a stack do `iproute2` sem falhas e sem uso de pacotes pip externos (`subprocess` puro).
+
+### Mapeamento dos Novos Plugins
+- **Redes (Setup & Conectividade)**: `mpc_setup_dual_nic.py` (Setup roteado Dual-NIC em Python), `mpc_flush_eth.py` (Limpeza de links), `mpc_rollback_eth.py` (Restauração baseada nas cópias seguras salvas em `/tmp/eth_backup*`).
+- **Redes (OOB Lateral Tunnels)**: `mpc_tunnel_start.py` (Conexão SSH em processo isolado / Background) e `mpc_tunnel_stop.py` (Mata o PID do túnel ativo).
+- **Troubleshooting**: `mpc_status.py` (Mostra IPs e Rotas para Ethernet e Wi-Fi simultaneamente), `mpc_ping_check.py` (Teste ICMP no Gateway Core).
+- **Diversos**: `mpc_portals.py` (Realiza chamadas via `xdg-open` contornando interrupções visuais associadas à janela root/sudo no Linux).
+
+**Segurança**: Todas as chamadas dos plugins de rede possuem detecções de EUID/Superusuário, abortando com o aviso amigável sem apresentar rastros e quebras de Menu (Crash / Traceback) ao usuário caso ele o execute como conta comum.
