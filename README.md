@@ -8,9 +8,6 @@
 
 **Versão:** 0.01.000  
 **Release:** BETA  
-**Autor:** 2º SGT GRESS  
-**Organização:** CyberVault System / Setor de Segurança e TI (STI)
-
 ---
 
 ## ⚡ Visão Geral
