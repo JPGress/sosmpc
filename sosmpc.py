@@ -12,12 +12,19 @@ __author__ = AUTHOR
 __release__ = RELEASE
 
 import sys
+import os
 from core.registry import load_plugins
 from core.menu import render_menu
 from core.dispatcher import Dispatcher
 from core.logger import log
 
 def main():
+    # Segurança: Apenas root pode operar o sosmpc
+    if os.geteuid() != 0:
+        log.error("Permissão Negada! Este toolkit foi desenhado para operações privilegiadas (Root/Sudo).")
+        print("\n[!] Por favor, execute como: sudo python3 sosmpc.py\n")
+        sys.exit(1)
+
     log.info("Sistema S.O.S. MPC Iniciado.")
     # Auto discovery dos plugins
     plugins_registry = load_plugins()
