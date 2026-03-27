@@ -41,3 +41,6 @@ TUNNEL_PROXMOX_PORT = "8006"
 TUNNEL_PFSENSE_PORT = "8080"
 TUNNEL_SOC_PORT = "8161"
 TUNNEL_PID_FILE = "/tmp/mpc_ssh_tunnels.pid"
+
+# --- DESTINOS DE AUDITORIA WAN/ISP ---
+WAN_TARGETS = ["8.8.8.8", "1.1.1.1", "google.com"]

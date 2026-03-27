@@ -40,3 +40,8 @@ O antigo script em Bash isolado em `00-ORGANIZAR/sh/` foi devidamente mapeado, d
 - **Diversos**: `mpc_portals.py` (Realiza chamadas via `xdg-open` contornando interrupções visuais associadas à janela root/sudo no Linux).
 
 **Segurança**: Todas as chamadas dos plugins de rede possuem detecções de EUID/Superusuário, abortando com o aviso amigável sem apresentar rastros e quebras de Menu (Crash / Traceback) ao usuário caso ele o execute como conta comum.
+
+## Nova Feature: Escalabilidade Diagnóstica (`teste_conectividade.sh`)
+Obedecendo ao princípio de evitar "redundâncias desnecessárias" (DRY), o antigo bash de testes em massa foi condensado em único módulo central de rastreio, limpando o código.
+
+- `plugins/troubleshooting/mpc_diagnostico.py`: Substituiu cabalmente os antigos `diagnostico.py` (placeholder) e `mpc_ping_check.py` reduzindo a sobrecarga na leitura do Menu de Interface. O plugin unifica pings de WAN (Google, DNS) usando `subprocess`, extração de IP Público com `curl ifconfig.me`, e traceroutes iterativos tanto para o Backbone da internet quanto para o Gateway Core Air-Gapped do MPC (PfSense, Proxmox, SOC).
